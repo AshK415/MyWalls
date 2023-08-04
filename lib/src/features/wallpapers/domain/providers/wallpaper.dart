@@ -21,8 +21,11 @@ class Wallpaper extends _$Wallpaper {
     try {
       final res = await api.getRandomPhotos(Env.unsplashApiKey, 30);
       if (res.statusCode == 200) {
-        final tres = (res.data) as List<Map<String, dynamic>>;
-        final images = tres.map((e) => ImageModel.fromJson(e)).toList();
+        //print(res.data);
+        final tres = (res.data) as List<dynamic>;
+        final images = tres
+            .map((e) => ImageModel.fromJson(e as Map<String, dynamic>))
+            .toList();
         return images;
       }
       debugPrint('[#] WallpaperProvider: Got error => ${res.statusCode}');
