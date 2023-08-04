@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:mywalls/src/features/wallpapers/wallpapers.dart';
 
@@ -19,12 +21,25 @@ class HomePage extends HookConsumerWidget {
                   child: Text('No wallpapers!!'),
                 );
               }
-              return ListView.builder(
+              return MasonryGridView.builder(
                   itemCount: images.length,
-                  shrinkWrap: true,
-                  itemBuilder: (c, i) => ListTile(
-                        title: Text(images[i].id),
-                      ));
+                  mainAxisSpacing: 4,
+                  crossAxisSpacing: 4,
+                  gridDelegate:
+                      const SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2),
+                  itemBuilder: (c, i) {
+                    return Material(
+                      borderRadius: BorderRadius.circular(16),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: CachedNetworkImage(
+                            fit: BoxFit.cover,
+                            height: (i % 5 + 1) * 140,
+                            imageUrl: images[i].urls.regular),
+                      ),
+                    );
+                  });
             },
             error: (_, __) => const Center(
                   child: Text('Got some error while fetching wallpapers!!!'),
