@@ -16,13 +16,14 @@ class HomePage extends HookConsumerWidget {
         padding: const EdgeInsets.all(8.0),
         child: imagesRef.when(
             data: (images) {
-              if (images.isEmpty) {
+              if (images.feeds.isEmpty) {
                 return const Center(
                   child: Text('No wallpapers!!'),
                 );
               }
+              final feeds = images.feeds;
               return MasonryGridView.builder(
-                  itemCount: images.length,
+                  itemCount: feeds.length,
                   mainAxisSpacing: 4,
                   crossAxisSpacing: 4,
                   gridDelegate:
@@ -36,7 +37,7 @@ class HomePage extends HookConsumerWidget {
                         child: CachedNetworkImage(
                             fit: BoxFit.cover,
                             height: (i % 5 + 1) * 140,
-                            imageUrl: images[i].urls.regular),
+                            imageUrl: feeds[i].urls.regular),
                       ),
                     );
                   });

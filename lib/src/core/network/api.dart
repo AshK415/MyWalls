@@ -1,3 +1,4 @@
+import 'package:mywalls/src/features/wallpapers/wallpapers.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart' hide Headers;
 
@@ -8,7 +9,7 @@ abstract class Api {
   factory Api(Dio dio) = _Api;
 
   @GET('/photos/random')
-  Future<Response> getRandomPhotos(
+  Future<List<ImageModel>> getRandomPhotos(
     @Query("client_id") String clientId,
     @Query("count") int count,
   );

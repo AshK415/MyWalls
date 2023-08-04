@@ -1,9 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:mywalls/src/core/core.dart';
 import 'package:mywalls/src/env/env.dart';
-import 'package:mywalls/src/features/wallpapers/domain/models/models.dart';
 import 'package:mywalls/src/utils/network_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import 'app_state.dart';
 
 part 'wallpaper.g.dart';
 
@@ -11,28 +11,34 @@ part 'wallpaper.g.dart';
 class Wallpaper extends _$Wallpaper {
   late Api api;
   @override
-  FutureOr<List<ImageModel>> build() async {
-    state = const AsyncLoading();
+  Future<AppState> build() {
+    state = AsyncData(AppState.inital());
     api = Api(NetworkClient.instance.dio);
-    return fetchRandomImages();
+    return _loadInitial();
   }
 
-  FutureOr<List<ImageModel>> fetchRandomImages() async {
-    try {
-      final res = await api.getRandomPhotos(Env.unsplashApiKey, 30);
-      if (res.statusCode == 200) {
-        //print(res.data);
-        final tres = (res.data) as List<dynamic>;
-        final images = tres
-            .map((e) => ImageModel.fromJson(e as Map<String, dynamic>))
-            .toList();
-        return images;
-      }
-      debugPrint('[#] WallpaperProvider: Got error => ${res.statusCode}');
-      return List.empty();
-    } catch (e) {
-      debugPrint('[#] WallpaperProvider: Got error => ${e.toString()}');
-      return List.empty();
-    }
+  Future<AppState> _loadInitial() async {
+    state = const AsyncLoading();
+    final res = await api.getRandomPhotos(Env.unsplashApiKey, 30);
+    return state.value!.copyWith(feeds: res);
   }
+
+  // FutureOr<List<ImageModel>> fetchRandomImages() async {
+  //   try {
+  //     final res = await api.getRandomPhotos(Env.unsplashApiKey, 30);
+  //     if (res.statusCode == 200) {
+  //       //print(res.data);
+  //       final tres = (res.data) as List<dynamic>;
+  //       final images = tres
+  //           .map((e) => ImageModel.fromJson(e as Map<String, dynamic>))
+  //           .toList();
+  //       return images;
+  //     }
+  //     debugPrint('[#] WallpaperProvider: Got error => ${res.statusCode}');
+  //     return List.empty();
+  //   } catch (e) {
+  //     debugPrint('[#] WallpaperProvider: Got error => ${e.toString()}');
+  //     return List.empty();
+  //   }
+  // }
 }
