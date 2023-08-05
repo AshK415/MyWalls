@@ -26,18 +26,28 @@ class HomePage extends HookConsumerWidget {
                   itemCount: feeds.length,
                   mainAxisSpacing: 4,
                   crossAxisSpacing: 4,
+                  physics: const BouncingScrollPhysics(),
                   gridDelegate:
                       const SliverSimpleGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2),
                   itemBuilder: (c, i) {
-                    return Material(
-                      borderRadius: BorderRadius.circular(16),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(16),
-                        child: CachedNetworkImage(
-                            fit: BoxFit.cover,
-                            height: (i % 5 + 1) * 140,
-                            imageUrl: feeds[i].urls.regular),
+                    return Hero(
+                      tag: feeds[i].id,
+                      child: Card(
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16)),
+                        child: InkWell(
+                          onTap: () {},
+                          borderRadius: BorderRadius.circular(16),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: CachedNetworkImage(
+                                fit: BoxFit.cover,
+                                height: (i % 5 + 1) * 100,
+                                imageUrl: feeds[i].urls.regular),
+                          ),
+                        ),
                       ),
                     );
                   });

@@ -1,9 +1,8 @@
 import 'package:mywalls/src/core/core.dart';
 import 'package:mywalls/src/env/env.dart';
-import 'package:mywalls/src/utils/network_client.dart';
+import 'package:mywalls/src/features/wallpapers/domain/providers/app_state.dart';
+import 'package:mywalls/src/shared/utils/network_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-import 'app_state.dart';
 
 part 'wallpaper.g.dart';
 

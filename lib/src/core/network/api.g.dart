@@ -90,7 +90,7 @@ class _Api implements Api {
   }
 
   @override
-  Future<Response<dynamic>> searchImage(
+  Future<List<ImageModel>> searchImage(
     String clientId,
     int count,
     String query,
@@ -104,7 +104,7 @@ class _Api implements Api {
     final _headers = <String, dynamic>{};
     final Map<String, dynamic>? _data = null;
     final _result = await _dio
-        .fetch<Map<String, dynamic>>(_setStreamType<Response<dynamic>>(Options(
+        .fetch<List<dynamic>>(_setStreamType<List<ImageModel>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -120,8 +120,10 @@ class _Api implements Api {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    //final value = Response<dynamic>.fromJson(_result.data!);
-    return _result;
+    var value = _result.data!
+        .map((dynamic i) => ImageModel.fromJson(i as Map<String, dynamic>))
+        .toList();
+    return value;
   }
 
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {

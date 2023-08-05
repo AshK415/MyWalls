@@ -23,7 +23,7 @@ abstract class Api {
   );
 
   @GET('/photos/random')
-  Future<Response> searchImage(
+  Future<List<ImageModel>> searchImage(
     @Query("client_id") String clientId,
     @Query("count") int count,
     @Query("query") String query,

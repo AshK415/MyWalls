@@ -1,10 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:mywalls/src/app/app_start.dart';
-
-import 'src/app/app.dart';
+import 'package:mywalls/start.dart';
 
 void main() async {
-  await AppStart.init();
-  runApp(const ProviderScope(overrides: [], child: App()));
+  await start();
 }
