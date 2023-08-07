@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:mywalls/src/features/wallpapers/wallpapers.dart';
+import 'package:mywalls/src/shared/theme/app_theme.dart';
 
 class HomePage extends HookConsumerWidget {
   const HomePage({super.key});
@@ -11,7 +12,18 @@ class HomePage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final imagesRef = ref.watch(wallpaperProvider);
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: const Text('MyWalls'),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () {
+              ref.read(appThemeModeProvider.notifier).toggle();
+            },
+            icon: const Icon(Icons.brightness_medium_rounded),
+          ),
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: imagesRef.when(
