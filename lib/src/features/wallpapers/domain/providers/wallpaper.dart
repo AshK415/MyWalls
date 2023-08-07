@@ -1,5 +1,5 @@
-import 'package:mywalls/src/core/core.dart';
-import 'package:mywalls/src/env/env.dart';
+import 'package:mywalls/src/features/wallpapers/data/data.dart';
+import 'package:mywalls/src/features/wallpapers/domain/domain.dart';
 import 'package:mywalls/src/features/wallpapers/domain/providers/app_state.dart';
 import 'package:mywalls/src/shared/utils/network_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -8,18 +8,24 @@ part 'wallpaper.g.dart';
 
 @riverpod
 class Wallpaper extends _$Wallpaper {
-  late Api api;
+  late WallPaperRepository _repository;
   @override
-  Future<AppState> build() {
+  FutureOr<AppState> build() {
     state = AsyncData(AppState.inital());
-    api = Api(NetworkClient.instance.dio);
+    final api = Api(NetworkClient.instance.dio);
+    _repository = WallpaperRepositoryImpl(api: api);
     return _loadInitial();
   }
 
   Future<AppState> _loadInitial() async {
     state = const AsyncLoading();
-    final res = await api.getRandomPhotos(Env.unsplashApiKey, 30);
-    return state.value!.copyWith(feeds: res);
+    final res = await _repository.fetchFeeds();
+    return res.fold(
+      (l) => AppState.inital(),
+      (r) => state.value!.copyWith(feeds: r),
+    );
+    // final res = await api.getRandomPhotos(Env.unsplashApiKey, 30);
+    // return state.value!.copyWith(feeds: res);
   }
 
   // FutureOr<List<ImageModel>> fetchRandomImages() async {
