@@ -9,7 +9,7 @@ abstract class Api {
   factory Api(Dio dio) = _Api;
 
   @GET('/photos/random')
-  Future<List<ImageModel>> getRandomPhotos(
+  Future<HttpResponse<List<ImageModel>>> getRandomPhotos(
     @Query('client_id') String clientId,
     @Query('count') int count,
   );

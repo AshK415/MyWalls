@@ -20,6 +20,7 @@ class AppStart {
       ],
     );
     // initialize providers
+    //await Future.wait([]);
     await initProviders(container);
     return container;
   }

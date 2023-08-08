@@ -1,3 +1,5 @@
+import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mywalls/src/env/env.dart';
 import 'package:mywalls/src/features/common/domain/failures/failure.dart';
@@ -20,8 +22,16 @@ class WallpaperRepositoryImpl implements WallPaperRepository {
 
   @override
   Future<Either<Failure, List<ImageModel>>> fetchFeeds({int count = 30}) async {
-    final res = await api.getRandomPhotos(Env.unsplashApiKey, count);
-    return right(res);
+    try {
+      final res = await api.getRandomPhotos(Env.unsplashApiKey, count);
+      if (res.response.statusCode == 200) {
+        return right(res.data);
+      }
+      return left(const Failure.badRequest());
+    } on DioException catch (e) {
+      debugPrint(e.message);
+      return left(const Failure.badRequest());
+    }
   }
 
   @override

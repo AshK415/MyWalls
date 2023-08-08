@@ -25,51 +25,76 @@ class HomePage extends HookConsumerWidget {
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8),
         child: imagesRef.when(
-            data: (images) {
-              if (images.feeds.isEmpty) {
-                return const Center(
-                  child: Text('No wallpapers!!'),
-                );
-              }
-              final feeds = images.feeds;
-              return MasonryGridView.builder(
-                  itemCount: feeds.length,
-                  mainAxisSpacing: 4,
-                  crossAxisSpacing: 4,
-                  physics: const BouncingScrollPhysics(),
-                  gridDelegate:
-                      const SliverSimpleGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2),
-                  itemBuilder: (c, i) {
-                    return Hero(
+          data: (images) {
+            if (images.feeds.isEmpty) {
+              return const Center(
+                child: Text('No wallpapers!!'),
+              );
+            }
+            final feeds = images.feeds;
+            return MasonryGridView.builder(
+              itemCount: feeds.length,
+              mainAxisSpacing: 6,
+              crossAxisSpacing: 8,
+              physics: const BouncingScrollPhysics(),
+              gridDelegate:
+                  const SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+              ),
+              itemBuilder: (c, i) {
+                return Stack(
+                  children: [
+                    Hero(
                       tag: feeds[i].id,
-                      child: Card(
+                      child: Material(
                         elevation: 2,
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16)),
-                        child: InkWell(
-                          onTap: () {},
                           borderRadius: BorderRadius.circular(16),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(16),
-                            child: CachedNetworkImage(
-                                fit: BoxFit.cover,
-                                height: (i % 5 + 1) * 100,
-                                imageUrl: feeds[i].urls.regular),
+                        ),
+                        color: Colors.black26,
+                        clipBehavior: Clip.antiAlias,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(16),
+                          child: CachedNetworkImage(
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            height: (i % 5 + 1) * 100,
+                            imageUrl: feeds[i].urls.regular,
                           ),
                         ),
                       ),
-                    );
-                  });
-            },
-            error: (_, __) => const Center(
-                  child: Text('Got some error while fetching wallpapers!!!'),
-                ),
-            loading: () => const Center(
-                  child: CircularProgressIndicator(),
-                )),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        gradient: LinearGradient(
+                          stops: const [0, 0.4, 0.6, 1],
+                          colors: [
+                            Colors.transparent,
+                            Colors.black.withOpacity(0),
+                            Colors.black.withOpacity(0.3),
+                            Colors.black.withOpacity(0.4)
+                          ],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                        ),
+                      ),
+                      height: (i % 5 + 1) * 100,
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+          error: (_, __) => const Center(
+            child: Text('Got some error while fetching wallpapers!!!'),
+          ),
+          loading: () => const Center(
+            child: CircularProgressIndicator(),
+          ),
+        ),
       ),
     );
   }
